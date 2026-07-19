@@ -16,3 +16,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run validate
+      - name: Check src/shared/ hasn't drifted from the web repo
+        run: |
+          git clone --depth 1 https://github.com/jsdosanj/gw-display /tmp/gw-display
+          ./scripts/sync-shared.sh /tmp/gw-display
+          git diff --exit-code -- src/shared || {
+            echo "::error::src/shared/ is out of sync with jsdosanj/gw-display. Run scripts/sync-shared.sh locally and commit the result." >&2
+            exit 1
+          }
