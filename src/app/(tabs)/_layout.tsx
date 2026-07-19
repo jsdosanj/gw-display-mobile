@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 
 import { Colors } from '../../constants/theme';
 import { viewIcons } from '../../lib/i18n';
+import { useThemeColors } from '../../lib/useThemeColors';
 import { useKioskStore } from '../../store/kioskStore';
 
 function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
@@ -12,20 +13,21 @@ function TabIcon({ glyph, focused }: { glyph: string; focused: boolean }) {
 export default function TabsLayout() {
   const language = useKioskStore((s) => s.language);
   const setLanguage = useKioskStore((s) => s.setLanguage);
+  const themeColors = useThemeColors();
 
   return (
     <Tabs
       screenOptions={{
         headerStyle: { backgroundColor: Colors.night900 },
         headerTitleStyle: { color: Colors.white },
-        headerTintColor: Colors.gold300,
+        headerTintColor: themeColors.gold300,
         headerRight: () => (
           <Text
             accessibilityRole="button"
             accessibilityLabel={language === 'pa' ? 'Switch to English' : 'ਪੰਜਾਬੀ ਵਿੱਚ ਬਦਲੋ'}
             onPress={() => setLanguage(language === 'pa' ? 'en' : 'pa')}
             style={{
-              color: Colors.gold300,
+              color: themeColors.gold300,
               fontWeight: '600',
               marginRight: 16,
               paddingVertical: 6,
@@ -35,7 +37,7 @@ export default function TabsLayout() {
           </Text>
         ),
         tabBarStyle: { backgroundColor: Colors.night900, borderTopColor: Colors.night800 },
-        tabBarActiveTintColor: Colors.gold300,
+        tabBarActiveTintColor: themeColors.gold300,
         tabBarInactiveTintColor: Colors.cloud500,
         tabBarLabelStyle: { fontSize: 11 },
       }}>

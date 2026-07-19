@@ -5,10 +5,15 @@ import { AppText } from '../../../components/AppText';
 import { Colors, Radius, Spacing } from '../../../constants/theme';
 import { viewIcons } from '../../../lib/i18n';
 
-const rows: { icon: string; title: string; route: '/(tabs)/more/about' | '/(tabs)/more/resources' | '/(tabs)/more/leaflets' }[] = [
+const rows: {
+  icon: string;
+  title: string;
+  route: '/(tabs)/more/about' | '/(tabs)/more/resources' | '/(tabs)/more/leaflets' | '/(tabs)/more/theme';
+}[] = [
   { icon: viewIcons.about, title: 'About', route: '/(tabs)/more/about' },
   { icon: viewIcons.resources, title: 'Resources', route: '/(tabs)/more/resources' },
   { icon: viewIcons.leaflets, title: 'Leaflets', route: '/(tabs)/more/leaflets' },
+  { icon: '🎨', title: 'Theme', route: '/(tabs)/more/theme' },
 ];
 
 export default function MoreMenuScreen() {

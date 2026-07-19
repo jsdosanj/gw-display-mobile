@@ -6,6 +6,7 @@ import { Text, type TextProps } from 'react-native';
 
 import { Colors } from '../constants/theme';
 import { fontFamilies } from '../lib/fonts';
+import { useThemeColors } from '../lib/useThemeColors';
 import { useKioskStore } from '../store/kioskStore';
 
 export type AppTextVariant = 'display' | 'heading' | 'subheading' | 'body' | 'label' | 'eyebrow';
@@ -35,6 +36,7 @@ export interface AppTextProps extends TextProps {
 
 export function AppText({ variant = 'body', color = 'white', style, ...props }: AppTextProps) {
   const language = useKioskStore((s) => s.language);
+  const themeColors = useThemeColors();
   const isPunjabi = language === 'pa';
   const weight = variantWeight[variant];
 
@@ -50,7 +52,7 @@ export function AppText({ variant = 'body', color = 'white', style, ...props }: 
     <Text
       style={[
         variantStyles[variant],
-        { fontFamily, color: Colors[color] },
+        { fontFamily, color: themeColors[color] },
         variant === 'eyebrow' && { textTransform: 'uppercase' as const },
         style,
       ]}
