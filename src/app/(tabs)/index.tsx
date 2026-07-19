@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../components/AppText';
+import { ThemeAtmosphere } from '../../components/ThemeAtmosphere';
 import { Colors, Radius, Spacing } from '../../constants/theme';
 import { text } from '../../lib/i18n';
 import { resolveImage } from '../../shared/imageMap';
@@ -22,97 +23,100 @@ export default function HomeScreen() {
   const home = displayContent.home;
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
-      <View style={styles.banner}>
-        <AppText variant="label" color="gold300">
-          {t(home.collaborationBanner)}
+    <View style={styles.screen}>
+      <ThemeAtmosphere />
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.banner}>
+          <AppText variant="label" color="gold300">
+            {t(home.collaborationBanner)}
+          </AppText>
+        </View>
+
+        <AppText variant="display" style={styles.heroTitle}>
+          {t(home.heroTitle)}
         </AppText>
-      </View>
+        <AppText variant="body" color="cloud200" style={styles.heroDescription}>
+          {t(home.heroDescription)}
+        </AppText>
 
-      <AppText variant="display" style={styles.heroTitle}>
-        {t(home.heroTitle)}
-      </AppText>
-      <AppText variant="body" color="cloud200" style={styles.heroDescription}>
-        {t(home.heroDescription)}
-      </AppText>
+        <AppText variant="heading" style={styles.sectionTitle}>
+          {t(home.differentiationTitle)}
+        </AppText>
+        <AppText variant="body" color="cloud200" style={styles.sectionBody}>
+          {t(home.differentiationDescription)}
+        </AppText>
 
-      <AppText variant="heading" style={styles.sectionTitle}>
-        {t(home.differentiationTitle)}
-      </AppText>
-      <AppText variant="body" color="cloud200" style={styles.sectionBody}>
-        {t(home.differentiationDescription)}
-      </AppText>
+        <View style={styles.cardRow}>
+          {home.differentiationCards.map((card) => {
+            const image = resolveImage(card.imagePath);
+            return (
+              <Pressable
+                key={card.id}
+                onPress={() => router.push(tabRoutes[card.id] as never)}
+                style={styles.diffCard}>
+                {image ? <Image source={image} style={styles.diffCardImage} /> : null}
+                <View style={styles.diffCardBody}>
+                  <AppText variant="subheading">{t(card.title)}</AppText>
+                  <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.xs }}>
+                    {t(card.description)}
+                  </AppText>
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
 
-      <View style={styles.cardRow}>
-        {home.differentiationCards.map((card) => {
-          const image = resolveImage(card.imagePath);
-          return (
+        <View style={styles.featureGrid}>
+          {home.featureCards.map((feature) => (
             <Pressable
-              key={card.id}
-              onPress={() => router.push(tabRoutes[card.id] as never)}
-              style={styles.diffCard}>
-              {image ? <Image source={image} style={styles.diffCardImage} /> : null}
-              <View style={styles.diffCardBody}>
-                <AppText variant="subheading">{t(card.title)}</AppText>
+              key={feature.id}
+              onPress={() => {
+                const route = tabRoutes[feature.id];
+                if (route) {
+                  router.push(route as never);
+                }
+              }}
+              style={styles.featureCard}>
+              <AppText style={{ fontSize: 28 }}>{feature.icon}</AppText>
+              <AppText variant="eyebrow" color="gold300" style={{ marginTop: Spacing.sm }}>
+                {t(feature.eyebrow)}
+              </AppText>
+              <AppText variant="subheading" style={{ marginTop: Spacing.xs }}>
+                {t(feature.title)}
+              </AppText>
+              <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.xs }}>
+                {t(feature.description)}
+              </AppText>
+              <AppText variant="label" color="gold300" style={{ marginTop: Spacing.sm }}>
+                {t(feature.cta)} →
+              </AppText>
+            </Pressable>
+          ))}
+        </View>
+
+        <AppText variant="heading" style={styles.sectionTitle}>
+          {t(displayContent.ui.labels.timelineTitle)}
+        </AppText>
+        <View style={styles.timeline}>
+          {displayContent.timeline.map((event, index) => (
+            <View key={`${event.year}-${index}`} style={styles.timelineRow}>
+              <View style={styles.timelineYearCol}>
+                <AppText variant="label" color="gold300">
+                  {event.year}
+                </AppText>
+                <View style={styles.timelineDot} />
+              </View>
+              <View style={styles.timelineBody}>
+                <AppText variant="subheading">{t(event.title)}</AppText>
                 <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.xs }}>
-                  {t(card.description)}
+                  {t(event.description)}
                 </AppText>
               </View>
-            </Pressable>
-          );
-        })}
-      </View>
-
-      <View style={styles.featureGrid}>
-        {home.featureCards.map((feature) => (
-          <Pressable
-            key={feature.id}
-            onPress={() => {
-              const route = tabRoutes[feature.id];
-              if (route) {
-                router.push(route as never);
-              }
-            }}
-            style={styles.featureCard}>
-            <AppText style={{ fontSize: 28 }}>{feature.icon}</AppText>
-            <AppText variant="eyebrow" color="gold300" style={{ marginTop: Spacing.sm }}>
-              {t(feature.eyebrow)}
-            </AppText>
-            <AppText variant="subheading" style={{ marginTop: Spacing.xs }}>
-              {t(feature.title)}
-            </AppText>
-            <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.xs }}>
-              {t(feature.description)}
-            </AppText>
-            <AppText variant="label" color="gold300" style={{ marginTop: Spacing.sm }}>
-              {t(feature.cta)} →
-            </AppText>
-          </Pressable>
-        ))}
-      </View>
-
-      <AppText variant="heading" style={styles.sectionTitle}>
-        {t(displayContent.ui.labels.timelineTitle)}
-      </AppText>
-      <View style={styles.timeline}>
-        {displayContent.timeline.map((event, index) => (
-          <View key={`${event.year}-${index}`} style={styles.timelineRow}>
-            <View style={styles.timelineYearCol}>
-              <AppText variant="label" color="gold300">
-                {event.year}
-              </AppText>
-              <View style={styles.timelineDot} />
             </View>
-            <View style={styles.timelineBody}>
-              <AppText variant="subheading">{t(event.title)}</AppText>
-              <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.xs }}>
-                {t(event.description)}
-              </AppText>
-            </View>
-          </View>
-        ))}
-      </View>
-    </ScrollView>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
