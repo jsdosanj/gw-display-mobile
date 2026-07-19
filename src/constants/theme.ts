@@ -1,65 +1,46 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-import '@/global.css';
-
+// Brand tokens matching the web kiosk's "digital darbar" palette
+// (src/styles/global.css in jsdosanj/gw-display) — this app runs a single
+// always-dark theme, same as the touchscreen kiosk it mirrors, not a
+// light/dark adaptive one. Phase 7 extends `gold` into the same seasonal
+// palette swaps (vaisakhi/diwali/gurpurab) the web app supports.
 import { Platform } from 'react-native';
 
 export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+  night950: '#050b14',
+  night900: '#091322',
+  night850: '#0d1a2c',
+  night800: '#112039',
+  gold300: '#f7d989',
+  gold400: '#e4bb5e',
+  gold500: '#bd8a22',
+  cloud200: '#d9e4ef',
+  cloud400: '#93a6bc',
+  cloud500: '#6f839a',
+  white: '#f8fafc',
 } as const;
-
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
     sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
     mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
   },
 });
 
 export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
 } as const;
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+export const Radius = {
+  sm: 12,
+  md: 20,
+  lg: 28,
+} as const;
