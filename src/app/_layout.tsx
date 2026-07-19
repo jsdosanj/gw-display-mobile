@@ -5,11 +5,13 @@ import { StatusBar } from 'react-native';
 
 import { Colors } from '../constants/theme';
 import { useAppFonts } from '../lib/fonts';
+import { useAnalyticsView } from '../lib/useAnalyticsView';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useAppFonts();
+  useAnalyticsView();
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
