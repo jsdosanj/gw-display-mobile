@@ -5,8 +5,10 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/AppText';
 import { ChapterBar } from '../../../components/ChapterBar';
 import { DetailCard } from '../../../components/DetailCard';
+import { ListenButton } from '../../../components/ListenButton';
 import { Colors, Radius, Spacing } from '../../../constants/theme';
 import { text } from '../../../lib/i18n';
+import { useStopTtsOnBlur } from '../../../lib/useStopTtsOnBlur';
 import * as kioskState from '../../../shared/kiosk-state';
 import displayContent from '../../../shared/display-content';
 import { resolveImage } from '../../../shared/imageMap';
@@ -15,6 +17,7 @@ import { useKioskStore } from '../../../store/kioskStore';
 export default function TakhtDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const navigation = useNavigation();
+  useStopTtsOnBlur();
   const language = useKioskStore((s) => s.language);
   const selectTakht = useKioskStore((s) => s.selectTakht);
   const t = (v: Parameters<typeof text>[0]) => text(v, language);
@@ -76,9 +79,16 @@ export default function TakhtDetailScreen() {
         <DetailCard label={t(displayContent.ui.labels.significance)}>{t(selected.significance)}</DetailCard>
 
         {selected.story ? (
-          <DetailCard label={t(displayContent.ui.labels.story)} tone="story">
-            {t(selected.story)}
-          </DetailCard>
+          <>
+            <DetailCard label={t(displayContent.ui.labels.story)} tone="story">
+              {t(selected.story)}
+            </DetailCard>
+            <ListenButton
+              id={`takht-story-${selected.id}`}
+              value={t(selected.story)}
+              label={t(displayContent.ui.labels.ttsListen)}
+            />
+          </>
         ) : null}
 
         {selected.funFact ? (

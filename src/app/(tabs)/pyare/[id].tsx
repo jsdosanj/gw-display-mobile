@@ -5,8 +5,10 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { AppText } from '../../../components/AppText';
 import { ChapterBar } from '../../../components/ChapterBar';
 import { DetailCard } from '../../../components/DetailCard';
+import { ListenButton } from '../../../components/ListenButton';
 import { Colors, Radius, Spacing } from '../../../constants/theme';
 import { text } from '../../../lib/i18n';
+import { useStopTtsOnBlur } from '../../../lib/useStopTtsOnBlur';
 import * as kioskState from '../../../shared/kiosk-state';
 import displayContent from '../../../shared/display-content';
 import { resolveImage } from '../../../shared/imageMap';
@@ -16,6 +18,7 @@ export default function PyaraDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const pyaraId = Number(id);
   const navigation = useNavigation();
+  useStopTtsOnBlur();
   const language = useKioskStore((s) => s.language);
   const selectPyara = useKioskStore((s) => s.selectPyara);
   const t = (v: Parameters<typeof text>[0]) => text(v, language);
@@ -79,6 +82,11 @@ export default function PyaraDetailScreen() {
         <DetailCard label={t(displayContent.ui.labels.story)} tone="story">
           {t(selected.story ?? selected.details)}
         </DetailCard>
+        <ListenButton
+          id={`pyara-story-${selected.id}`}
+          value={t(selected.story ?? selected.details)}
+          label={t(displayContent.ui.labels.ttsListen)}
+        />
 
         {selected.accomplishments || selected.roles ? (
           <DetailCard label={t(displayContent.ui.labels.afterKhalsa)}>

@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../../components/AppText';
+import { ListenButton } from '../../../components/ListenButton';
 import { Colors, Radius, Spacing } from '../../../constants/theme';
 import { text } from '../../../lib/i18n';
+import { useStopTtsOnBlur } from '../../../lib/useStopTtsOnBlur';
 import displayContent from '../../../shared/display-content';
 import { useKioskStore } from '../../../store/kioskStore';
 
 export default function AboutScreen() {
+  useStopTtsOnBlur();
   const language = useKioskStore((s) => s.language);
   const t = (v: Parameters<typeof text>[0]) => text(v, language);
   const about = displayContent.about;
@@ -35,9 +38,14 @@ export default function AboutScreen() {
         </View>
       </View>
 
-      <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.md }}>
+      <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.md, marginBottom: Spacing.sm }}>
         {t(about.partnerships)}
       </AppText>
+      <ListenButton
+        id="about-partnerships"
+        value={t(about.partnerships)}
+        label={t(displayContent.ui.labels.ttsListen)}
+      />
       <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.sm }}>
         {t(about.futureUpdates)}
       </AppText>

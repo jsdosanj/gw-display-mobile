@@ -2,9 +2,11 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '../../components/AppText';
 import { DetailCard } from '../../components/DetailCard';
+import { ListenButton } from '../../components/ListenButton';
 import { Colors, Radius, Spacing } from '../../constants/theme';
 import { fontFamilies } from '../../lib/fonts';
 import { text } from '../../lib/i18n';
+import { useStopTtsOnBlur } from '../../lib/useStopTtsOnBlur';
 import displayContent from '../../shared/display-content';
 import { useKioskStore } from '../../store/kioskStore';
 
@@ -17,6 +19,7 @@ function SectionTitle({ children }: { children: string }) {
 }
 
 export default function LearnScreen() {
+  useStopTtsOnBlur();
   const language = useKioskStore((s) => s.language);
   const t = (v: Parameters<typeof text>[0]) => text(v, language);
   const learn = displayContent.learnSikhi;
@@ -24,14 +27,22 @@ export default function LearnScreen() {
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
       <AppText variant="display">{t(learn.title)}</AppText>
-      <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.md }}>
+      <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.md, marginBottom: Spacing.sm }}>
         {t(learn.intro)}
       </AppText>
+      <ListenButton id="learn-intro" value={t(learn.intro)} label={t(displayContent.ui.labels.ttsListen)} />
 
       <SectionTitle>{t(learn.introTitle)}</SectionTitle>
       <AppText variant="body" color="cloud200">
         {t(learn.whatIsSikhi)}
       </AppText>
+      <View style={{ marginTop: Spacing.sm }}>
+        <ListenButton
+          id="learn-what-is-sikhi"
+          value={t(learn.whatIsSikhi)}
+          label={t(displayContent.ui.labels.ttsListen)}
+        />
+      </View>
       <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.sm }}>
         {t(learn.founding)}
       </AppText>
@@ -113,6 +124,13 @@ export default function LearnScreen() {
           <AppText variant="body" color="cloud200" style={{ marginTop: Spacing.sm }}>
             {t(shabad.translation)}
           </AppText>
+          <View style={{ marginTop: Spacing.sm }}>
+            <ListenButton
+              id={`shabad-${shabad.ang}`}
+              value={t(shabad.translation)}
+              label={t(displayContent.ui.labels.ttsListen)}
+            />
+          </View>
           <AppText variant="label" color="gold300" style={{ marginTop: Spacing.sm }}>
             Ang {shabad.ang} · {shabad.raag} · {t(shabad.author)}
           </AppText>
