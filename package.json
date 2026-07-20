@@ -56,5 +56,8 @@
     "test": "jest",
     "validate": "npm run lint && npm run typecheck && npm run test"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "uuid": "^11.1.1"
+  }
 }
