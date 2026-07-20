@@ -8,11 +8,17 @@ installed at gurdwaras, sharing content and app logic with the web kiosk at
 
 Full feature parity with the web kiosk is implemented: Home, Panj Pyare,
 Panj Takht, Quiz, Learn Sikhi, About/Resources/Leaflets, bilingual EN/PA,
-seasonal theming, text-to-speech, and anonymous device analytics. Remaining
-work is release packaging (Phase 9): a real EAS build, on-device testing on
-actual gurdwara hardware, and cutting the first GitHub Release. See the plan
-at `jsdosanj/gw-display`'s repo (`/root/.claude/plans/woolly-hopping-wave.md`
+seasonal theming, text-to-speech, and anonymous device analytics. Every
+push to `main` produces a signed APK automatically (see below). Remaining
+work: on-device testing on actual gurdwara hardware. See the plan at
+`jsdosanj/gw-display`'s repo (`/root/.claude/plans/woolly-hopping-wave.md`
 in the session that authored it) for the full phased roadmap.
+
+## Download
+
+**[Download the latest APK](https://github.com/jsdosanj/gw-display-mobile/releases/download/latest-apk/legacy-of-the-khalsa.apk)**
+— this link always points to the most recent build from `main`, republished
+automatically by CI on every push (see "Building the Android APK" below).
 
 ## Why this exists / distribution model
 
@@ -31,6 +37,21 @@ npm run validate    # lint + typecheck + test — run before every commit
 ```
 
 ## Building the Android APK
+
+Builds run automatically via [`.github/workflows/eas-build.yml`](.github/workflows/eas-build.yml)
+on every push to `main` (`android-apk` profile), authenticated with an
+`EXPO_TOKEN` repository secret — no local machine or CLI login needed. You
+can also trigger a build manually from the Actions tab (`workflow_dispatch`),
+which lets you pick `android-apk` or `production` (Play Store `.aab`).
+
+Every successful `android-apk` build is automatically downloaded and
+re-published to a single rolling `latest-apk` GitHub Release, so the
+[Download](#download) link above never changes — each new build just
+replaces the asset behind it. `production` builds are not published this
+way (see the [EAS dashboard](https://expo.dev/accounts/jdosan3645s-team/projects/jasvant/builds)
+for those, or any individual build's logs under **Build on EAS**).
+
+To build locally instead:
 
 ```bash
 npx eas-cli build --platform android --profile android-apk
