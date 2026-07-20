@@ -1,7 +1,7 @@
 name: EAS Build
 
 permissions:
-  contents: read
+  contents: write
 
 on:
   push:
@@ -51,8 +51,34 @@ jobs:
       # profile that matches this app's gurdwara-touchscreen deployment
       # model — see README. No --no-wait: this job blocks until the build
       # finishes so its success/failure and logs reflect the actual build
-      # outcome, not just whether it was queued.
+      # outcome, not just whether it was queued. --json gives a
+      # machine-parseable artifact URL instead of scraping human-readable
+      # log output.
       - name: Build on EAS
+        id: eas_build
         env:
           BUILD_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.profile || 'android-apk' }}
-        run: eas build --platform android --profile "$BUILD_PROFILE" --non-interactive
+        run: |
+          eas build --platform android --profile "$BUILD_PROFILE" --non-interactive --json > build-result.json
+          echo "profile=$BUILD_PROFILE" >> "$GITHUB_OUTPUT"
+          echo "apk_url=$(jq -r '.[0].artifacts.buildUrl // empty' build-result.json)" >> "$GITHUB_OUTPUT"
+
+      # Only the direct-install profile gets published — production (Play
+      # Store .aab) builds aren't meant for public download links. Publishes
+      # to a single rolling "latest-apk" release/tag (not one release per
+      # build) so the download link below never changes, matching "every
+      # push produces a fresh build" — each new build just replaces the
+      # asset behind the same stable URL.
+      - name: Download built APK
+        if: steps.eas_build.outputs.profile == 'android-apk' && steps.eas_build.outputs.apk_url != ''
+        run: curl -sSL -o legacy-of-the-khalsa.apk "${{ steps.eas_build.outputs.apk_url }}"
+
+      - name: Publish as GitHub Release asset
+        if: steps.eas_build.outputs.profile == 'android-apk' && steps.eas_build.outputs.apk_url != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest-apk
+          name: Latest Android build
+          body: Automatically published by ${{ github.workflow }} from commit ${{ github.sha }}. Always reflects the most recent `main` build — see README for install instructions.
+          files: legacy-of-the-khalsa.apk
+          make_latest: true
