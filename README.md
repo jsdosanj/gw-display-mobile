@@ -32,6 +32,16 @@ npm run validate    # lint + typecheck + test — run before every commit
 
 ## Building the Android APK
 
+Builds run automatically via [`.github/workflows/eas-build.yml`](.github/workflows/eas-build.yml)
+on every push to `main` (`android-apk` profile), authenticated with an
+`EXPO_TOKEN` repository secret — no local machine or CLI login needed. You
+can also trigger a build manually from the Actions tab (`workflow_dispatch`),
+which lets you pick `android-apk` or `production` (Play Store `.aab`).
+Find the finished `.apk` under **Build on EAS** in the workflow run's logs,
+or on the [EAS dashboard](https://expo.dev/accounts/jdosan3645s-team/projects/jasvant/builds).
+
+To build locally instead:
+
 ```bash
 npx eas-cli build --platform android --profile android-apk
 ```

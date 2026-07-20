@@ -4,6 +4,8 @@ permissions:
   contents: read
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       profile:
@@ -44,8 +46,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # No --no-wait: this job blocks until the build finishes so its
-      # success/failure and logs reflect the actual build outcome, not just
-      # whether it was queued.
+      # inputs.profile only exists for workflow_dispatch runs; push-triggered
+      # runs (every merge to main) always use android-apk, the direct-install
+      # profile that matches this app's gurdwara-touchscreen deployment
+      # model — see README. No --no-wait: this job blocks until the build
+      # finishes so its success/failure and logs reflect the actual build
+      # outcome, not just whether it was queued.
       - name: Build on EAS
-        run: eas build --platform android --profile ${{ inputs.profile }} --non-interactive
+        env:
+          BUILD_PROFILE: ${{ github.event_name == 'workflow_dispatch' && inputs.profile || 'android-apk' }}
+        run: eas build --platform android --profile "$BUILD_PROFILE" --non-interactive
